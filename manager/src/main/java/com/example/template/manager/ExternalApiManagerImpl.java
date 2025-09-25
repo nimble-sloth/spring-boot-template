@@ -1,9 +1,10 @@
-﻿package com.example.template.manager;
+package com.example.template.manager;
 
 import com.example.template.domain.manager.ExternalApiManager;
 import com.example.template.ri.rest.ExternalApiClient;
-import org.springframework.stereotype.Service;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
 import java.util.Date;
 
 @Service

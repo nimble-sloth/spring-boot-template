@@ -1,3 +1,21 @@
+# fix_api.ps1 — rewrite API Java files as UTF-8 (no BOM)
+
+$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+
+# ApiConstants.java
+$apiConst = @'
+package com.example.template.api.rs;
+
+public final class ApiConstants {
+  private ApiConstants() {}
+  public static final String API = "/api";
+  public static final String V   = "/v1";
+}
+'@
+[IO.File]::WriteAllText('api\src\main\java\com\example\template\api\rs\ApiConstants.java', $apiConst, $utf8NoBom)
+
+# TemplateEndpoint.java
+$templateEndpoint = @'
 package com.example.template.api.rs;
 
 import com.example.template.domain.orchestrator.JobOrchestrator;
@@ -36,3 +54,9 @@ public class TemplateEndpoint {
     return ResponseEntity.ok(Map.of("result", String.valueOf(one)));
   }
 }
+'@
+[IO.File]::WriteAllText('api\src\main\java\com\example\template\api\rs\TemplateEndpoint.java', $templateEndpoint, $utf8NoBom)
+
+# Optional: print first 3 bytes (should NOT be 239 187 191)
+Get-ChildItem api\src\main\java\com\example\template\api\rs -Filter *.java |
+  % { "[{0}] -> {1}" -f $_.Name, ([byte[]](Get-Content $_.FullName -Encoding Byte -TotalCount 3) -join ' ') }
